@@ -3,7 +3,6 @@ apply plugin: "com.android.application"
 import com.android.build.OutputFile
 
 
-
 project.ext.react = [
     entryFile: "index.js",
     enableHermes: false,  // clean and rebuild if changing
@@ -11,7 +10,9 @@ project.ext.react = [
 
 apply from: "../../node_modules/react-native/react.gradle"
 
+
 def enableSeparateBuildPerCPUArchitecture = false
+
 
 def enableProguardInReleaseBuilds = false
 
@@ -23,7 +24,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -56,10 +57,15 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-        }       
+        }
+        release {
+            // Caution! In production, you need to generate your own keystore file.
+            // see https://facebook.github.io/react-native/docs/signed-apk-android.
+            signingConfig signingConfigs.debug
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
     }
-    
-    
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
